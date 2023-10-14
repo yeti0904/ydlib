@@ -3,6 +3,9 @@ Yeti's D Library
 
 Some useful stuff I made for D
 
+Links:
+- [Dub package page](https://code.dlang.org/packages/ydlib) (Includes documentation)
+
 # Install
 ```
 dub add ydlib
@@ -34,3 +37,8 @@ void main() {
 	}
 }
 ```
+
+## ydlib.common
+Contains common functions that are missing from Phobos
+
+Has a variety of functions, best to look at the documentation
