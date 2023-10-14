@@ -1,18 +1,22 @@
+/// module for serialisation/deserialisation for files or other uses
 module ydlib.serialise;
 
 import std.string;
 import std.bitmanip;
 
+/// type of a value (integer/string/structure)
 enum ValueType {
 	Integer   = 0x00,
 	String    = 0x01,
 	Structure = 0x02
 }
 
+/// flags used for different variations of a value
 enum Flags {
 	Array = 0b00000001
 }
 
+/// contents of a value
 union ValueContents {
 	int    _int;
 	string _string;
@@ -26,6 +30,7 @@ union ValueContents {
 	}
 }
 
+/// main value structure
 struct Value {
 	ValueType type;
 	bool      isArray;
@@ -36,18 +41,21 @@ struct Value {
 		Structure       structure;
 	}
 
+	/// makes a value from an integer
 	this(int from) {
 		type     = ValueType.Integer;
 		isArray  = false;
 		single   = ValueContents(from);
 	}
 
+	/// makes a value from a string
 	this(string from) {
 		type     = ValueType.String;
 		isArray  = false;
 		single   = ValueContents(from);
 	}
 
+	/// makes a value from an integer array
 	this(int[] from) {
 		type    = ValueType.Integer;
 		isArray = true;
@@ -57,6 +65,7 @@ struct Value {
 		}
 	}
 
+	/// makes a value from a string array
 	this(string[] from) {
 		type    = ValueType.String;
 		isArray = true;
@@ -66,28 +75,34 @@ struct Value {
 		}
 	}
 
+	/// makes a value from a structure
 	this(Structure from) {
 		type      = ValueType.Structure;
 		isArray   = false;
 		structure = from;
 	}
 
+	/// makes a value from an integer
 	static Value Int(int from = 0) {
 		return Value(from);
 	}
 
+	/// makes a value from a string
 	static Value String(string from = "") {
 		return Value(from);
 	}
 
+	/// makes a value from an integer array
 	static Value IntArray(int[] from = []) {
 		return Value(from);
 	}
 
+	/// makes a value from a string array
 	static Value StringArray(string[] from = []) {
 		return Value(from);
 	}
 
+	/// returns the value's contents as an integer
 	int GetInt() {
 		assert(type == ValueType.Integer);
 		assert(!array);
@@ -95,6 +110,7 @@ struct Value {
 		return single._int;
 	}
 
+	/// returns the value's contents as a string
 	string GetString() {
 		assert(type == ValueType.String);
 		assert(!array);
@@ -102,6 +118,7 @@ struct Value {
 		return single._string;
 	}
 
+	/// returns the value's contents as an integer array
 	int[] GetIntArray() {
 		assert(type == ValueType.Integer);
 		assert(array);
@@ -115,6 +132,7 @@ struct Value {
 		return ret;
 	}
 
+	/// returns the value's contents as a string array
 	string[] GetStringArray() {
 		assert(type == ValueType.String);
 		assert(array);
@@ -129,21 +147,26 @@ struct Value {
 	}
 }
 
+/// structures are just arrays of values
 alias Structure = Value[];
 
+/// exception for DataManager methods
 class DataException : Exception {
 	this(string msg, string file = __FILE__, size_t line = __LINE__) {
 		super(msg, file, line);
 	}
 }
 
+/// main class for data from a file etc
 class DataManager {
 	Structure[string] structures;
 
+	/// adds a structure type
 	void AddStructure(string name, Structure structure) {
 		structures[name] = structure;
 	}
 
+	/// checks if a structure is valid
 	bool ValidStructure(string name, Structure structure) {
 		Structure type = structures[name];
 
@@ -160,6 +183,7 @@ class DataManager {
 		return true;
 	}
 
+	/// turns the data into an array of bytes
 	ubyte[] Serialise(Structure structure) {
 		ubyte[] ret;
 
@@ -214,6 +238,7 @@ class DataManager {
 		return ret;
 	}
 
+	/// creates data from an array of bytes
 	Structure Deserialise(ref ubyte[] data) {
 		Structure ret;
 
