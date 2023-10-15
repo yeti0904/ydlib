@@ -41,22 +41,22 @@ class ListNode(T) {
 	}
 
 	/// inserts a value after this entry
-	void InsertAfter(T value) {
+	void InsertAfter(List!T pparent, T value) {
 		auto oldNext = next;
 
 		next             = new ListNode!T(value);
-		next.parent      = parent;
+		next.parent      = pparent;
 		next.next        = oldNext;
 		oldNext.previous = next;
 		next.previous    = this;
 	}
 
 	/// inserts a value before this entry
-	void InsertBefore(T value) {
+	void InsertBefore(List!T pparent, T value) {
 		auto oldPrev = previous;
 
 		previous          = new ListNode!T(value);
-		previous.parent   = parent;
+		previous.parent   = pparent;
 		previous.previous = oldPrev;
 		previous.next     = this;
 
