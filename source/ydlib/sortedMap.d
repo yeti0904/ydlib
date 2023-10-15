@@ -2,6 +2,7 @@
 module ydlib.sortedMap;
 
 import std.format;
+import ydlib.list;
 
 /// exception used for sorted map errors
 class SortedMapException : Exception {
@@ -17,17 +18,17 @@ private struct MapEntry(T1, T2) {
 
 /// sorted map class
 class SortedMap(T1, T2) {
-	private MapEntry!(T1, T2)[] entries;
+	private List!(MapEntry!(T1, T2)) entries;
 
 	this() {
-		
+		entries = new List!(MapEntry!(T1, T2));
 	}
 
 	/// overrides in keyword
 	T2* opBinaryRight(string op: "in")(T1 key) {
-		foreach (ref e ; entries) {
-			if (e.key == key) {
-				return &e.value;
+		foreach (e ; entries) {
+			if (e.value.key == key) {
+				return &e.value.value;
 			}
 		}
 
@@ -49,14 +50,14 @@ class SortedMap(T1, T2) {
 	void opIndexAssign(T2 value, T1 key) {
 		auto entry = MapEntry!(T1, T2)(key, value);
 
-		foreach (i, ref e ; entries) {
-			if (e.key > key) {
-				if (i == 0) {
-					entries = entry ~ entries;
-				}
-				else {
-					entries = entries[0 .. i] ~ entry ~ entries[i .. $];
-				}
+		if (entries.head is null) {
+			entries.head = new ListNode!(MapEntry!(T1, T2))(entry);
+			return;
+		}
+
+		foreach (e ; entries) {
+			if (e.value.key > key) {
+				e.InsertBefore(entry);
 				return;
 			}
 		}
@@ -66,8 +67,8 @@ class SortedMap(T1, T2) {
 
 	/// overrides foreach loops
 	int opApply(scope int delegate(T1 key, ref T2 value) dg) {
-		foreach (ref e ; entries) {
-			int result = dg(e.key, e.value);
+		foreach (e ; entries) {
+			int result = dg(e.value.key, e.value.value);
 
 			if (result) {
 				return result;
