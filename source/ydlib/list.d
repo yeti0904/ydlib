@@ -44,6 +44,7 @@ class ListNode(T) {
 		next             = new ListNode!T(value);
 		next.next        = oldNext;
 		oldNext.previous = next;
+		next.previous    = this;
 	}
 
 	/// inserts a value before this entry
