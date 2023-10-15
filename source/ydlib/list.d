@@ -10,6 +10,8 @@ class ListNode(T) {
 	/// value next to this entry
 	ListNode!T next;
 
+	private List!T parent;
+
 	this() {
 		
 	}
@@ -34,6 +36,7 @@ class ListNode(T) {
 		auto last = GetLastEntry();
 
 		last.next          = new ListNode!T(pvalue);
+		last.next.parent   = parent;
 		last.next.previous = last;
 	}
 
@@ -42,6 +45,7 @@ class ListNode(T) {
 		auto oldNext = next;
 
 		next             = new ListNode!T(value);
+		next.parent      = parent;
 		next.next        = oldNext;
 		oldNext.previous = next;
 		next.previous    = this;
@@ -52,10 +56,14 @@ class ListNode(T) {
 		auto oldPrev = previous;
 
 		previous          = new ListNode!T(value);
+		previous.parent   = parent;
 		previous.previous = oldPrev;
 		previous.next     = this;
 
-		if (oldPrev !is null) {
+		if (oldPrev is null) {
+			parent.head = previous;
+		}
+		else {
 			oldPrev.next = previous;
 		}
 	}
@@ -72,7 +80,8 @@ class List(T) {
 	/// appends the value to the end of the list
 	void opOpAssign(string op: "~")(T value) {
 		if (head is null) {
-			head = new ListNode!T(value);
+			head        = new ListNode!T(value);
+			head.parent = this;
 		}
 		else {
 			head ~= value;
