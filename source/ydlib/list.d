@@ -61,7 +61,7 @@ class ListNode(T) {
 		previous.next     = this;
 
 		if (oldPrev is null) {
-			parent.head = previous;
+			pparent.head = previous;
 		}
 		else {
 			oldPrev.next = previous;
