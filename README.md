@@ -42,3 +42,30 @@ void main() {
 Contains common functions that are missing from Phobos
 
 Has a variety of functions, best to look at the documentation
+
+## ydlib.list
+Contains a doubly linked list class
+
+### Example
+```
+import std.stdio;
+import ydlib.list;
+
+void main() {
+	auto myList = new List!int();
+
+	myList ~= 1;
+	myList ~= 2;
+	myList ~= 3;
+
+	foreach (num ; myList) {
+		if (num.value % 2 == 0) {
+			num.InsertAfter(5);
+		}
+	}
+
+	foreach (num ; myList) {
+		writeln(num.value);
+	}
+}
+```
