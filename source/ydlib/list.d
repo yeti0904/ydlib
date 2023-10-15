@@ -54,7 +54,10 @@ class ListNode(T) {
 		previous          = new ListNode!T(value);
 		previous.previous = oldPrev;
 		previous.next     = this;
-		oldPrev.next      = previous;
+
+		if (oldPrev !is null) {
+			oldPrev.next = previous;
+		}
 	}
 }
 
