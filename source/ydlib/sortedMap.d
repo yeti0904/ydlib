@@ -49,6 +49,13 @@ class SortedMap(T1, T2) {
 
 	/// overrides assigning to index
 	void opIndexAssign(T2 value, T1 key) {
+		foreach (e ; entries) {
+			if (e.value.key == key) {
+				e.value.value = value;
+				return;
+			}
+		}
+	
 		auto entry = MapEntry!(T1, T2)(key, value);
 
 		if (entries.head is null) {
