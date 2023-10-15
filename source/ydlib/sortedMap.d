@@ -18,7 +18,8 @@ private struct MapEntry(T1, T2) {
 
 /// sorted map class
 class SortedMap(T1, T2) {
-	private List!(MapEntry!(T1, T2)) entries;
+	/// linked list of entries
+	List!(MapEntry!(T1, T2)) entries;
 
 	this() {
 		entries = new List!(MapEntry!(T1, T2));
