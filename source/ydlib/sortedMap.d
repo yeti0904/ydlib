@@ -65,7 +65,7 @@ class SortedMap(T1, T2) {
 
 		foreach (e ; entries) {
 			if (e.value.key > key) {
-				e.InsertBefore(entry);
+				e.InsertBefore(entries, entry);
 				return;
 			}
 		}
